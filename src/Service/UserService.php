@@ -20,7 +20,7 @@ class UserService
         $user->setEmail($email);
         $user->setUsername($username);
         $user->setPassword($plainPassword);
-        $user->setRoles([$role]);
+        $user->setRoles($role);
 
         $this->userRepository->persist($user);
         return $user;
