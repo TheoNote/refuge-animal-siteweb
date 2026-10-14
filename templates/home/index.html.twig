@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil — Refuge Animalier{% endblock %}
+
+{% block body %}
+    <section class="page-intro">
+        <div class="container">
+            <h1>Bienvenue au Refuge Animalier</h1>
+            <p>Consultez les animaux accueillis au refuge et accédez à leur fiche détaillée.</p>
+            <a href="#animaux" class="btn btn-primary">Voir les animaux</a>
+        </div>
+    </section>
+
+    <section class="container section" id="animaux">
+        <h2>Les animaux du refuge</h2>
+
+        <div class="animal-grid">
+            {% for animal in animals %}
+                {% set statusClass = animal.status == 'Disponible' ? 'available' : (animal.status == 'En cours d\'adoption' ? 'pending' : 'adopted') %}
+                {% set age = date().diff(animal.birthdate) %}
+                {% set ageLabel = age.y >= 1
+                    ? age.y ~ ' an' ~ (age.y > 1 ? 's' : '')
+                    : (age.m >= 1 ? age.m ~ ' mois' : age.d ~ ' jour' ~ (age.d > 1 ? 's' : '')) %}
+                <article class="animal-card">
+                    <div class="animal-photo">{{ animal.emoji }}</div>
+                    <div class="animal-body">
+                        <div class="animal-top">
+                            <h3>{{ animal.name }}</h3>
+                            <span class="status status-{{ statusClass }}">{{ animal.status }}</span>
+                        </div>
+                        <p class="animal-meta">{{ animal.species }} · {{ animal.breed }} · {{ ageLabel }}</p>
+                        <p class="animal-desc">{{ animal.description }}</p>
+                        <a href="#" class="btn btn-soft btn-block">Voir la fiche détaillée</a>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}
