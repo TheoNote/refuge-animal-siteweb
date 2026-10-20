@@ -7,26 +7,35 @@ use App\Enum\RoleUser;
 use App\Repository\UserRepository;
 use App\Service\UserService;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserServiceTest extends TestCase
 {
-    public function testRegisterCreatesUser(): void
+    public function testRegisterUser(): void
     {
-        $repository = $this->createMock(UserRepository::class);
-        $repository->expects($this->once())
-            ->method('persist')
+        $userRepository = $this->createMock(UserRepository::class);
+        $userRepository->expects($this->once())
+            ->method('persistAndSave')
             ->with($this->isInstanceOf(User::class));
 
-        $service = new UserService($repository);
-        $email = 'test@test.test';
-        $userName = 'test';
-        $password = 'test';
-        $role=RoleUser::Worker;
-        $user = $service->register($email, $userName, $password, [$role]);
+        $passwordHasher = $this->createMock(UserPasswordHasherInterface::class);
+        $passwordHasher->expects($this->once())
+            ->method('hashPassword')
+            ->with($this->isInstanceOf(User::class), 'test')
+            ->willReturn('hashed_password');
 
-        $this->assertSame($email, $user->getEmail());
-        $this->assertSame($userName, $user->getUsername());
-        $this->assertSame($password, $user->getPassword());
-        $this->assertContains($role, $user->getRoles());
+        $service = new UserService($userRepository, $passwordHasher);
+
+        $user = new User();
+        $user->setEmail('test@test.test');
+        $user->setUsername('test');
+
+        $result = $service->register($user, 'test');
+
+        $this->assertSame($user, $result);
+        $this->assertSame('test@test.test', $user->getEmail());
+        $this->assertSame('test', $user->getUsername());
+        $this->assertSame('hashed_password', $user->getPassword());
+        $this->assertContains(RoleUser::User, $user->getRoles());
     }
 }
