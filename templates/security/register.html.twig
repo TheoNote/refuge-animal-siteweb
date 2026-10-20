@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription — Refuge Animalier{% endblock %}
+
+{% block body %}
+    <section class="container section">
+        <div class="auth-card">
+            <h1>Créer un compte</h1>
+            <p class="auth-subtitle">Rejoignez le refuge et suivez les animaux qui vous tiennent à cœur.</p>
+
+            {{ form_start(form, {'attr': {'class': 'auth-form'}}) }}
+                {% if form.vars.submitted and not form.vars.valid %}
+                    <p class="alert alert-error">Merci de corriger les erreurs ci-dessous.</p>
+                {% endif %}
+                {{ form_errors(form) }}
+                {{ form_row(form.username) }}
+                {{ form_row(form.email) }}
+                {{ form_row(form.password.first) }}
+                {{ form_row(form.password.second) }}
+                <button class="btn btn-primary btn-block" type="submit">S'inscrire</button>
+            {{ form_end(form) }}
+
+            <p class="auth-alt">Déjà un compte ? <a href="#">Se connecter</a></p>
+        </div>
+    </section>
+{% endblock %}

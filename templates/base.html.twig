@@ -31,12 +31,24 @@
                     <a href="#animaux">Les animaux</a>
                 </nav>
                 <div class="nav-actions">
-                    <a href="#" class="btn btn-outline">Connexion</a>
+                    {% if app.user %}
+                        <span class="nav-user">{{ app.user.userIdentifier }}</span>
+                    {% else %}
+                        <a href="#" class="btn btn-outline">Connexion</a>
+                        <a href="{{ path('register_user') }}" class="btn btn-primary">Inscription</a>
+                    {% endif %}
                 </div>
             </div>
         </header>
 
         <main>
+            <div class="container">
+                {% for type in ['success', 'error'] %}
+                    {% for message in app.flashes(type) %}
+                        <p class="alert alert-{{ type }}">{{ message }}</p>
+                    {% endfor %}
+                {% endfor %}
+            </div>
             {% block body %}{% endblock %}
         </main>
 

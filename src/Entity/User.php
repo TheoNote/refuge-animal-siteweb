@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Enum\RoleUser;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
@@ -19,25 +20,26 @@ use Symfony\Component\Validator\Constraints\Type;
 
 #[Entity(repositoryClass: UserRepository::class)]
 #[Table(name: 'users')]
+#[UniqueEntity(fields: ['email'], message: 'Cette adresse e-mail est déjà utilisée.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[Id, Column(type: 'integer'), GeneratedValue]
     private ?int $id = null;
 
     #[Column(type: 'string', length: 100, nullable: false)]
-    #[NotBlank, Type('string')]
+    #[NotBlank(message: 'Le nom d\'utilisateur est obligatoire.'), Type('string', message: 'Le nom d\'utilisateur doit être un texte.')]
     private string $username;
 
     #[Column(type: 'string', length: 180, unique: true)]
-    #[Email]
+    #[Email(message: 'L\'adresse e-mail n\'est pas valide.')]
     private string $email;
 
     #[Column(type: 'string', nullable: false)]
-    #[NotBlank, PasswordStrength]
+    #[NotBlank(message: 'Le mot de passe est obligatoire.'), PasswordStrength(message: 'Le mot de passe est trop faible. Utilisez un mot de passe plus fort.')]
     private string $password;
 
     #[Column(type: 'json')]
-    #[NotBlank]
+    #[NotBlank(message: 'Au moins un rôle est requis.')]
     private array $roles = [RoleUser::User];
 
     #[Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
