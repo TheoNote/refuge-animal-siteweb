@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des utilisateurs — Refuge Animalier{% endblock %}
+
+{% block body %}
+    <section class="container section">
+        <div class="admin-header">
+            <div>
+                <h1>Gestion des utilisateurs</h1>
+                <p class="admin-subtitle">{{ users|length }} utilisateur{{ users|length > 1 ? 's' : '' }} inscrit{{ users|length > 1 ? 's' : '' }}</p>
+            </div>
+        </div>
+
+        {% if users is empty %}
+            <div class="admin-empty">
+                <span class="admin-empty-icon">👤</span>
+                <h2>Aucun utilisateur</h2>
+                <p>Aucun compte n'est encore inscrit.</p>
+            </div>
+        {% else %}
+            <div class="admin-grid">
+                {% for user in users %}
+                    {% set isAdmin = 'ROLE_ADMIN' in user.roles %}
+                    {% set isWorker = 'ROLE_WORKER' in user.roles and not isAdmin %}
+                    {% set roleLabel = isAdmin ? 'Administrateur' : (isWorker ? 'Bénévole' : 'Utilisateur') %}
+                    {% set roleClass = isAdmin ? 'adopted' : (isWorker ? 'pending' : 'available') %}
+                    {% set isSelf = app.user and user.id == app.user.id %}
+
+                    <article class="admin-card">
+                        <div class="admin-card-photo">👤</div>
+                        <div class="admin-card-body">
+                            <div class="admin-card-top">
+                                <h3>{{ user.username }}</h3>
+                                <span class="status status-{{ roleClass }}">{{ roleLabel }}</span>
+                            </div>
+                            <p class="admin-card-meta">{{ user.email }}</p>
+                            <p class="admin-card-meta">Inscrit le {{ user.createdAt|date('d/m/Y') }}</p>
+                            <div class="admin-card-actions">
+                                <a href="{{ path('app_admin_user_edit', {id: user.id}) }}" class="btn btn-soft btn-sm">Modifier</a>
+                                {% if not isSelf %}
+                                    <form
+                                        action="{{ path('app_admin_user_delete', {id: user.id}) }}"
+                                        method="post"
+                                        onsubmit="return confirm('Supprimer {{ user.username }} ? Cette action est définitive.');"
+                                        class="inline-form"
+                                    >
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token('delete' ~ user.id) }}" />
+                                        <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

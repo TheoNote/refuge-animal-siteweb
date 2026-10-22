@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier {{ user.username }} — Refuge Animalier{% endblock %}
+
+{% block body %}
+    <section class="container section">
+        <div class="admin-header">
+            <div>
+                <a href="{{ path('app_admin_user_index') }}" class="admin-back-link">← Retour à la liste</a>
+                <h1>Modifier {{ user.username }}</h1>
+            </div>
+        </div>
+
+        <div class="admin-form-layout">
+            <article class="admin-form-card">
+                {{ form_start(form) }}
+                    <fieldset class="admin-fieldset">
+                        <legend>Informations</legend>
+                        <div class="admin-form-grid">
+                            <div class="form-row">
+                                {{ form_label(form.username) }}
+                                {{ form_widget(form.username) }}
+                                {{ form_errors(form.username) }}
+                            </div>
+                            <div class="form-row">
+                                {{ form_label(form.email) }}
+                                {{ form_widget(form.email) }}
+                                {{ form_errors(form.email) }}
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="admin-fieldset">
+                        <legend>Rôles</legend>
+                        <div class="admin-form-roles">
+                            {{ form_widget(form.roles) }}
+                            {{ form_errors(form.roles) }}
+                        </div>
+                    </fieldset>
+
+                    <div class="admin-form-actions">
+                        {{ form_widget(form.save) }}
+                        <a href="{{ path('app_admin_user_index') }}" class="btn btn-outline">Annuler</a>
+                    </div>
+                {{ form_end(form) }}
+            </article>
+
+            <aside class="admin-preview-card">
+                <h3>Aperçu</h3>
+                <div class="admin-preview-photo">👤</div>
+                <div class="admin-preview-body">
+                    <div class="admin-preview-top">
+                        <strong>{{ user.username }}</strong>
+                        {% set isAdmin = 'ROLE_ADMIN' in user.roles %}
+                        {% set isWorker = 'ROLE_WORKER' in user.roles and not isAdmin %}
+                        {% set roleLabel = isAdmin ? 'Administrateur' : (isWorker ? 'Bénévole' : 'Utilisateur') %}
+                        {% set roleClass = isAdmin ? 'adopted' : (isWorker ? 'pending' : 'available') %}
+                        <span class="status status-{{ roleClass }}">{{ roleLabel }}</span>
+                    </div>
+                    <p class="admin-card-meta">{{ user.email }}</p>
+                    <p class="admin-card-meta">Inscrit le {{ user.createdAt|date('d/m/Y') }}</p>
+                </div>
+            </aside>
+        </div>
+    </section>
+{% endblock %}

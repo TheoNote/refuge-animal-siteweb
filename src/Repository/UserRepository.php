@@ -43,4 +43,12 @@ class UserRepository  extends ServiceEntityRepository
 
         return $query->getQuery()->getOneOrNullResult();
     }
+
+    public function findAllOrderedByEmail(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->orderBy('u.email', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }
