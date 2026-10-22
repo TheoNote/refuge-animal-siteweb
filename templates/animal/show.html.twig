@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ animal.name }} — Refuge Animalier{% endblock %}
+
+{% block body %}
+    <section class="container section">
+        <div class="animal-detail">
+            <a href="{{ path('app_home') }}#animaux" class="btn btn-soft">← Retour à la liste</a>
+
+            <article class="animal-detail-card">
+                <div class="animal-detail-header">
+                    <div class="animal-photo animal-photo-large">{{ animal.emoji }}</div>
+                    <div class="animal-detail-title">
+                        <h1>{{ animal.name }}</h1>
+                        {% set statusValue = animal.status.value %}
+                        {% set statusClass = statusValue == 'Disponible' ? 'available' : (statusValue == "En cours d'adoption" ? 'pending' : 'adopted') %}
+                        <span class="status status-{{ statusClass }}">{{ statusValue }}</span>
+                        <p class="animal-meta">{{ animal.species }} · {{ animal.breed }}</p>
+                        {% set age = date().diff(animal.birthdate) %}
+                        {% set ageLabel = age.y >= 1
+                            ? age.y ~ ' an' ~ (age.y > 1 ? 's' : '')
+                            : (age.m >= 1 ? age.m ~ ' mois' : age.d ~ ' jour' ~ (age.d > 1 ? 's' : '')) %}
+                        <p class="animal-meta">Né(e) le {{ animal.birthdate|date('d/m/Y') }} · {{ ageLabel }}</p>
+                    </div>
+                </div>
+
+                <div class="animal-detail-body">
+                    <h2>À propos</h2>
+                    <p>{{ animal.description|nl2br }}</p>
+
+                    <div class="animal-detail-actions">
+                        {% if statusValue == 'Disponible' %}
+                            <a href="#" class="btn btn-primary">Demander à adopter</a>
+                        {% else %}
+                            <button class="btn btn-soft" disabled>Adoption non disponible</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+{% endblock %}
