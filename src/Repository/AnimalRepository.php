@@ -42,4 +42,13 @@ class AnimalRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findByName(string $name): ?Animal
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.name = :name')
+            ->setParameter('name', $name)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

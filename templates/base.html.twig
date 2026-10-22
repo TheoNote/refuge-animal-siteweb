@@ -29,6 +29,9 @@
                 <nav class="main-nav">
                     <a href="{{ path('app_home') }}" class="is-active">Accueil</a>
                     <a href="#animaux">Les animaux</a>
+                    {% if app.user and 'ROLE_WORKER' in app.user.roles %}
+                        <a href="{{ path('app_animal_index') }}">Gestion des animaux</a>
+                    {% endif %}
                 </nav>
                 <div class="nav-actions">
                     {% if app.user %}
