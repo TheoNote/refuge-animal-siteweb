@@ -32,7 +32,7 @@ class UserTest extends TestCase
 
     public function testUserContainUserRole(): void
     {
-        $this->assertContains(RoleUser::User, $this->user->getRoles());
+        $this->assertContains(RoleUser::User->value, $this->user->getRoles());
     }
 
 
@@ -53,7 +53,7 @@ class UserTest extends TestCase
     public function testRolesGetterAndSetter(): void
     {
         $this->user->setRoles([RoleUser::User]);
-        $this->assertSame([RoleUser::User], $this->user->getRoles());
+        $this->assertSame([RoleUser::User->value], $this->user->getRoles());
         $this->assertIsArray($this->user->getRoles());
     }
 

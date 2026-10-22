@@ -107,11 +107,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getRoles(): array
     {
-        return $this->roles;
+        return array_map(
+            static fn (RoleUser|string $role): string => $role instanceof RoleUser ? $role->value : $role,
+            $this->roles
+        );
     }
 
     /**

@@ -36,6 +36,6 @@ class UserServiceTest extends TestCase
         $this->assertSame('test@test.test', $user->getEmail());
         $this->assertSame('test', $user->getUsername());
         $this->assertSame('hashed_password', $user->getPassword());
-        $this->assertContains(RoleUser::User, $user->getRoles());
+        $this->assertContains(RoleUser::User->value, $user->getRoles());
     }
 }
