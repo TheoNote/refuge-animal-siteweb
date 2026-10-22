@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion — Refuge Animalier{% endblock %}
+
+{% block body %}
+    <section class="container section">
+        <div class="auth-card">
+            <h1>Se connecter</h1>
+            <p class="auth-subtitle">Accédez à votre espace pour suivre les animaux du refuge.</p>
+
+            {% if error %}
+                <p class="alert alert-error">{{ error.messageKey|trans(error.messageData, 'security', 'fr') }}</p>
+            {% endif %}
+
+            <form method="post" action="{{ path('app_login') }}" class="auth-form">
+                <div>
+                    <label for="username">Adresse e-mail</label>
+                    <input type="email" value="{{ last_username }}" name="_username" id="username" autocomplete="email" required autofocus>
+                </div>
+                <div>
+                    <label for="password">Mot de passe</label>
+                    <input type="password" name="_password" id="password" autocomplete="current-password" required>
+                </div>
+                <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+                <button class="btn btn-primary btn-block" type="submit">Se connecter</button>
+            </form>
+
+            <p class="auth-alt">Pas encore de compte ? <a href="{{ path('register_user') }}">S'inscrire</a></p>
+        </div>
+    </section>
+{% endblock %}

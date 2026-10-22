@@ -2,6 +2,7 @@
 
 namespace App\Tests\Functional;
 
+use App\Enum\RoleUser;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -70,7 +71,7 @@ class RegisterControllerTest extends WebTestCase
         self::assertNotNull($user);
         self::assertSame('validuser', $user->getUsername());
         self::assertNotSame('Str0ng!Passw0rd#2026', $user->getPassword());
-        self::assertContains('ROLE_USER', $user->getRoles());
+        self::assertContains(RoleUser::User->value, $user->getRoles());
 
         if($user)
             $userRepository->delete($user);

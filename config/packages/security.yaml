@@ -15,7 +15,7 @@ security:
             - ROLE_WORKER
             - ROLE_USER
         ROLE_WORKER:
-            -ROLE_USER
+            - ROLE_USER
 
     firewalls:
         dev:
@@ -25,6 +25,14 @@ security:
         main:
             lazy: true
             provider: user_provider
+
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                enable_csrf: true
+
+            logout:
+                path: app_logout
 
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall

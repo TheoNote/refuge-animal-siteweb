@@ -33,8 +33,9 @@
                 <div class="nav-actions">
                     {% if app.user %}
                         <span class="nav-user">{{ app.user.userIdentifier }}</span>
+                        <a href="{{ path('app_logout') }}" class="btn btn-outline">Déconnexion</a>
                     {% else %}
-                        <a href="#" class="btn btn-outline">Connexion</a>
+                        <a href="{{ path('app_login') }}" class="btn btn-outline">Connexion</a>
                         <a href="{{ path('register_user') }}" class="btn btn-primary">Inscription</a>
                     {% endif %}
                 </div>
