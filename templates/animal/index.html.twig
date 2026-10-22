@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des animaux — Refuge Animalier{% endblock %}
+
+{% block body %}
+    <section class="container section">
+        <div class="admin-header">
+            <div>
+                <h1>Gestion des animaux</h1>
+                <p class="admin-subtitle">{{ animals|length }} animal{{ animals|length > 1 ? 's' : '' }} au refuge</p>
+            </div>
+            <a href="{{ path('app_animal_new') }}" class="btn btn-primary">+ Nouvel animal</a>
+        </div>
+
+        {% if animals is empty %}
+            <div class="admin-empty">
+                <span class="admin-empty-icon">🐾</span>
+                <h2>Aucun animal enregistré</h2>
+                <p>Commencez par ajouter le premier animal du refuge.</p>
+                <a href="{{ path('app_animal_new') }}" class="btn btn-primary">+ Ajouter un animal</a>
+            </div>
+        {% else %}
+            <div class="admin-grid">
+                {% for animal in animals %}
+                    {% set statusValue = animal.status.value %}
+                    {% set statusClass = statusValue == 'Disponible' ? 'available' : (statusValue == "En cours d'adoption" ? 'pending' : 'adopted') %}
+                    {% set age = date().diff(animal.birthdate) %}
+                    {% set ageLabel = age.y >= 1
+                        ? age.y ~ ' an' ~ (age.y > 1 ? 's' : '')
+                        : (age.m >= 1 ? age.m ~ ' mois' : age.d ~ ' jour' ~ (age.d > 1 ? 's' : '')) %}
+
+                    <article class="admin-card">
+                        <div class="admin-card-photo">{{ animal.emoji }}</div>
+                        <div class="admin-card-body">
+                            <div class="admin-card-top">
+                                <h3>
+                                    <a href="{{ path('app_animal_show', {id: animal.id}) }}">{{ animal.name }}</a>
+                                </h3>
+                                <span class="status status-{{ statusClass }}">{{ statusValue }}</span>
+                            </div>
+                            <p class="admin-card-meta">{{ animal.species }} · {{ animal.breed }} · {{ ageLabel }}</p>
+                            <p class="admin-card-desc">{{ animal.description|length > 80 ? animal.description|slice(0, 80) ~ '…' : animal.description }}</p>
+                            <div class="admin-card-actions">
+                                <a href="{{ path('app_animal_edit', {id: animal.id}) }}" class="btn btn-soft btn-sm">Modifier</a>
+                                <form
+                                    action="{{ path('app_animal_delete', {id: animal.id}) }}"
+                                    method="post"
+                                    onsubmit="return confirm('Supprimer {{ animal.name }} ? Cette action est définitive.');"
+                                    class="inline-form"
+                                >
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token('delete' ~ animal.id) }}" />
+                                    <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

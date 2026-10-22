@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if animal.id %}
+        Modifier {{ animal.name }} — Refuge Animalier
+    {% else %}
+        Nouvel animal — Refuge Animalier
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <section class="container section">
+        <div class="admin-header">
+            <div>
+                <a href="{{ path('app_animal_index') }}" class="admin-back-link">← Retour à la liste</a>
+                <h1>{{ animal.id ? 'Modifier ' ~ animal.name : 'Ajouter un animal' }}</h1>
+            </div>
+        </div>
+
+        <div class="admin-form-layout">
+            <article class="admin-form-card">
+                {{ form_start(form) }}
+                    <fieldset class="admin-fieldset">
+                        <legend>Identité</legend>
+                        <div class="admin-form-grid">
+                            <div class="form-row">
+                                {{ form_label(form.name) }}
+                                {{ form_widget(form.name) }}
+                                {{ form_errors(form.name) }}
+                            </div>
+                            <div class="form-row">
+                                {{ form_label(form.species) }}
+                                {{ form_widget(form.species) }}
+                                {{ form_errors(form.species) }}
+                            </div>
+                            <div class="form-row">
+                                {{ form_label(form.breed) }}
+                                {{ form_widget(form.breed) }}
+                                {{ form_errors(form.breed) }}
+                            </div>
+                            <div class="form-row">
+                                {{ form_label(form.emoji) }}
+                                {{ form_widget(form.emoji) }}
+                                {{ form_errors(form.emoji) }}
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="admin-fieldset">
+                        <legend>Détails</legend>
+                        <div class="admin-form-grid">
+                            <div class="form-row">
+                                {{ form_label(form.birthdate) }}
+                                {{ form_widget(form.birthdate) }}
+                                {{ form_errors(form.birthdate) }}
+                            </div>
+                            <div class="form-row">
+                                {{ form_label(form.status) }}
+                                {{ form_widget(form.status) }}
+                                {{ form_errors(form.status) }}
+                            </div>
+                            <div class="form-row admin-form-full">
+                                {{ form_label(form.description) }}
+                                {{ form_widget(form.description) }}
+                                {{ form_errors(form.description) }}
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <div class="admin-form-actions">
+                        {{ form_widget(form.save) }}
+                        <a href="{{ path('app_animal_index') }}" class="btn btn-outline">Annuler</a>
+                    </div>
+                {{ form_end(form) }}
+            </article>
+
+            {% if animal.id %}
+                <aside class="admin-preview-card">
+                    <h3>Aperçu</h3>
+                    <div class="admin-preview-photo">{{ animal.emoji }}</div>
+                    <div class="admin-preview-body">
+                        <div class="admin-preview-top">
+                            <strong>{{ animal.name }}</strong>
+                            {% set statusValue = animal.status.value %}
+                            {% set statusClass = statusValue == 'Disponible' ? 'available' : (statusValue == "En cours d'adoption" ? 'pending' : 'adopted') %}
+                            <span class="status status-{{ statusClass }}">{{ statusValue }}</span>
+                        </div>
+                        <p class="admin-card-meta">{{ animal.species }} · {{ animal.breed }}</p>
+                        <a href="{{ path('app_animal_show', {id: animal.id}) }}" class="btn btn-soft btn-sm btn-block">Voir la fiche publique</a>
+                    </div>
+                </aside>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
