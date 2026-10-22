@@ -32,6 +32,9 @@
                     {% if app.user and 'ROLE_WORKER' in app.user.roles %}
                         <a href="{{ path('app_animal_index') }}">Gestion des animaux</a>
                     {% endif %}
+                    {% if app.user and 'ROLE_ADMIN' in app.user.roles %}
+                        <a href="{{ path('app_admin_user_index') }}">Gestion des utilisateurs</a>
+                    {% endif %}
                 </nav>
                 <div class="nav-actions">
                     {% if app.user %}
