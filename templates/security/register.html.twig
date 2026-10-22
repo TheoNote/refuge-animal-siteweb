@@ -20,7 +20,7 @@
                 <button class="btn btn-primary btn-block" type="submit">S'inscrire</button>
             {{ form_end(form) }}
 
-            <p class="auth-alt">Déjà un compte ? <a href="#">Se connecter</a></p>
+            <p class="auth-alt">Déjà un compte ? <a href="{{ path('app_login') }}">Se connecter</a></p>
         </div>
     </section>
 {% endblock %}
