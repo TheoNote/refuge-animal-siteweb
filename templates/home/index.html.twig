@@ -16,7 +16,8 @@
 
         <div class="animal-grid">
             {% for animal in animals %}
-                {% set statusClass = animal.status == 'Disponible' ? 'available' : (animal.status == 'En cours d\'adoption' ? 'pending' : 'adopted') %}
+                {% set statusValue = animal.status.value %}
+                {% set statusClass = statusValue == 'Disponible' ? 'available' : (statusValue == "En cours d'adoption" ? 'pending' : 'adopted') %}
                 {% set age = date().diff(animal.birthdate) %}
                 {% set ageLabel = age.y >= 1
                     ? age.y ~ ' an' ~ (age.y > 1 ? 's' : '')
@@ -26,11 +27,11 @@
                     <div class="animal-body">
                         <div class="animal-top">
                             <h3>{{ animal.name }}</h3>
-                            <span class="status status-{{ statusClass }}">{{ animal.status }}</span>
+                            <span class="status status-{{ statusClass }}">{{ statusValue }}</span>
                         </div>
                         <p class="animal-meta">{{ animal.species }} · {{ animal.breed }} · {{ ageLabel }}</p>
                         <p class="animal-desc">{{ animal.description }}</p>
-                        <a href="#" class="btn btn-soft btn-block">Voir la fiche détaillée</a>
+                        <a href="{{ path('app_animal_show', {id: animal.id}) }}" class="btn btn-soft btn-block">Voir la fiche détaillée</a>
                     </div>
                 </article>
             {% endfor %}
